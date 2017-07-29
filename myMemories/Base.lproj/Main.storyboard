@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="JeB-Yx-wiW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AVo-ay-qTf">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -12,7 +12,7 @@
         <!--Bem vindo ao MyMemories-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="myMemories" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Permissions" id="BYZ-38-t0r" customClass="ViewController" customModule="myMemories" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -20,13 +20,101 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="6bc-56-jzd">
+                                <rect key="frame" x="20" y="168" width="335" height="331"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEl-Zu-XKJ">
+                                        <rect key="frame" x="0.0" y="0.0" width="335" height="239"/>
+                                        <string key="text">De modo a funcionar corretamente, o aplicativo MyMemories precisa de permissões para acessar a biblioteca de fotos, gravar sua voz (microfone) e transcrever o que você disse. Clique no botão abaixo para liberar as permissões necessárias. Você pode mudar sua decisão mais tarde se desejar,lá nas configurações de seu celular.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ps-aj-O34">
+                                        <rect key="frame" x="0.0" y="289" width="335" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="Confirmar"/>
+                                        <connections>
+                                            <action selector="onClickConfirmar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="McM-FT-TxD"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6bc-56-jzd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="K1O-ur-7qf"/>
+                            <constraint firstItem="6bc-56-jzd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RlG-T7-Pnr"/>
+                            <constraint firstItem="6bc-56-jzd" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" constant="-40" id="sTE-6A-MAu"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Bem vindo ao MyMemories" id="OdA-YA-guk"/>
+                    <connections>
+                        <outlet property="labelConfirmar" destination="eEl-Zu-XKJ" id="4z0-uu-Tas"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="967" y="-645"/>
+        </scene>
+        <!--Memories View Controller-->
+        <scene sceneID="pYp-UX-R3D">
+            <objects>
+                <collectionViewController id="MDf-Sv-l8F" customClass="MemoriesViewController" customModule="myMemories" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="XKX-Qj-iNW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="WTh-GD-nP6">
+                            <size key="itemSize" width="200" height="200"/>
+                            <size key="headerReferenceSize" width="50" height="50"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Memory" id="gkp-h8-sXY" customClass="MemoryCell" customModule="myMemories" customModuleProvider="target">
+                                <rect key="frame" x="87.5" y="50" width="200" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TI4-tJ-miP">
+                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                    </subviews>
+                                </view>
+                                <connections>
+                                    <outlet property="imageView" destination="TI4-tJ-miP" id="NYb-wU-MTj"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header" id="Uek-1N-rrd">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r7C-nr-3fj">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="MDf-Sv-l8F" id="cab-fm-0Qi"/>
+                                    </connections>
+                                </searchBar>
+                            </subviews>
+                        </collectionReusableView>
+                        <connections>
+                            <outlet property="dataSource" destination="MDf-Sv-l8F" id="1fp-ry-Dfi"/>
+                            <outlet property="delegate" destination="MDf-Sv-l8F" id="CWW-nx-Qx8"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="OBk-3D-6gr"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n4M-P6-oaO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2864.8000000000002" y="-645.42728635682158"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="whB-r5-mha">
@@ -45,6 +133,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dz9-KE-taN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="29.600000000000001" y="-644.52773613193403"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Wd6-0Z-iNf">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AVo-ay-qTf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cf0-28-uUJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="MDf-Sv-l8F" kind="relationship" relationship="rootViewController" id="gll-LY-rfl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ffn-Rf-4Qr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1925.5999999999999" y="-645.42728635682158"/>
         </scene>
     </scenes>
 </document>

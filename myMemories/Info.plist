@@ -32,5 +32,11 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Uitlizaremos as permissões de foto para acessar suas memórias preferidas</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Utilizaremos as permissões de transcrição de áudio para otimizar a busca de suas memórias </string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Utilizaremos as permissões de gravação de áudio para armazenar suas experiencias com sua memoria</string>
 </dict>
 </plist>
