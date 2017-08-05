@@ -12,7 +12,7 @@ import AVFoundation // biblioteca para utilizar o microfone
 import Photos // biblioteca de fotos do usuario
 import Speech // reconhecimento de transcrição de fala
 
-class MemoriesViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MemoriesViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout{
     
     var memories = [URL]()
 
@@ -80,6 +80,9 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
                 memories.append(memoryPath)
             }
         }
+        
+        collectionView?.reloadSections(IndexSet(integer: 1))
+        
     }
     
     func resize(image: UIImage, to width: CGFloat) -> UIImage? {
@@ -126,14 +129,79 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     func saveNewMemory(image: UIImage) {
         let memoryName = "memory-\(Date().timeIntervalSince1970)"
         let imageName = memoryName + ".jpg"
-//        let thumbnailName = memoryName + ".thumb"
+        let thumbnailName = memoryName + ".thumb"
         do {
             let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
             if let jpegData = UIImageJPEGRepresentation(image, 80) {
                 try jpegData.write(to: imagePath, options: [.atomicWrite])
             }
+            
+            if let thumbnail = resize(image: image, to: 200) {
+                let thumbPath = getDocumentsDirectory().appendingPathComponent(thumbnailName)
+                
+                if let thumbData = UIImageJPEGRepresentation(thumbnail, 80) {
+                    try thumbData.write(to: thumbPath, options: [.atomicWrite])
+                }
+            }
         } catch {
             print("Falha ao salvar foto no disco")
+        }
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 0 {
+            return 0
+        } else {
+            return memories.count
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory",
+                                                      for: indexPath) as! MemoryCell
+        
+        let memory = memories[indexPath.row]
+        
+        let imageName = memory.appendingPathExtension("thumb").path
+        
+        let image = UIImage.init(contentsOfFile: imageName)
+        
+        cell.imageView.image = image
+        
+        if cell.gestureRecognizers == nil {
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(memoryLongPress))
+            
+            recognizer.minimumPressDuration = 0.25
+            
+            cell.addGestureRecognizer(recognizer)
+            
+            cell.layer.borderColor = UIColor.white.cgColor
+            cell.layer.borderWidth = 3
+            cell.layer.cornerRadius = 10
+        }
+        
+        return cell
+    }
+    
+    func memoryLongPress(sender: UILongPressGestureRecognizer) {
+        collectionView?.backgroundColor = UIColor.red
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if section == 1 {
+            return CGSize.zero
+        } else {
+            return CGSize(width: 0, height: 50)
         }
     }
     
