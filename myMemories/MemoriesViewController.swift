@@ -12,14 +12,25 @@ import AVFoundation // biblioteca para utilizar o microfone
 import Photos // biblioteca de fotos do usuario
 import Speech // reconhecimento de transcrição de fala
 
-class MemoriesViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout{
+import CoreSpotlight
+import MobileCoreServices
+
+class MemoriesViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout, AVAudioRecorderDelegate {
     
     var memories = [URL]()
-
+    var filteredMemories = [URL]()
+    var activeMemory: URL!
+    var recordingURL: URL!
+    var audioRecorder: AVAudioRecorder?
+    var audioPlayer: AVAudioPlayer?
+    var searchQuery: CSSearchQuery?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addMemory))
+        
+        recordingURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
         
         loadMemories()
     }
@@ -80,6 +91,8 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
                 memories.append(memoryPath)
             }
         }
+        
+        filteredMemories = memories
         
         collectionView?.reloadSections(IndexSet(integer: 1))
         
@@ -156,7 +169,63 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         if section == 0 {
             return 0
         } else {
-            return memories.count
+            return filteredMemories.count
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterMemories(text: searchText)
+    }
+    
+    func filterMemories(text: String) {
+        guard text.characters.count > 0 else {
+            filteredMemories = memories
+        
+            UIView.performWithoutAnimation {
+                collectionView?.reloadSections(IndexSet(integer: 1))
+            }
+            
+            return
+        }
+        
+        var allItems = [CSSearchableItem]()
+        
+        searchQuery?.cancel()
+        
+        let queryString = "contentDescription == \"*\(text)*\"c"
+        searchQuery = CSSearchQuery(queryString: queryString, attributes: nil)
+        
+        searchQuery?.foundItemsHandler = {
+            items in
+            allItems.append(contentsOf: items)
+        }
+        
+        searchQuery?.completionHandler = {
+            error in
+            
+            DispatchQueue.main.async {
+                [unowned self] in
+                
+                self.listItems(matches: allItems)
+            }
+        }
+        
+        searchQuery?.start()
+        
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func listItems (matches: [CSSearchableItem]) {
+        filteredMemories = matches.map {
+            item in
+            return URL(fileURLWithPath: item.uniqueIdentifier)
+        }
+        
+        UIView.performWithoutAnimation {
+            collectionView?.reloadSections(IndexSet(integer: 1))
         }
     }
     
@@ -165,7 +234,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory",
                                                       for: indexPath) as! MemoryCell
         
-        let memory = memories[indexPath.row]
+        let memory = filteredMemories[indexPath.row]
         
         let imageName = memory.appendingPathExtension("thumb").path
         
@@ -189,7 +258,150 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     }
     
     func memoryLongPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let cell = sender.view as! MemoryCell
+            
+            if let index = collectionView?.indexPath(for: cell) {
+                activeMemory = filteredMemories[index.row]
+                
+                recordMemory()
+            }
+        } else if sender.state == .ended {
+            finishRecording(success: true)
+        }
+    }
+    
+    func transcribeHack(memory: URL) {
+        
+        let transcription = transcriptionURL(for: memory)
+        
+        let text = "MInha memoria do dia 10/08"
+        
+        do {
+            print (text)
+            
+            try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+            
+            indexMemory(memory: memory, text: text)
+            
+        } catch {
+            print("Erro ao salvar a transcrição de áudio")
+        }
+    }
+    
+    func recordMemory() {
         collectionView?.backgroundColor = UIColor.red
+        let recordSession = AVAudioSession.sharedInstance()
+        do {
+            try recordSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            
+            let settings = [AVFormatIDKey: Int(kAudioFormatMPEG4AAC), AVSampleRateKey: 44100,
+                            AVNumberOfChannelsKey: 2, AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue]
+            
+            audioRecorder = try AVAudioRecorder(url: recordingURL, settings: settings)
+            
+            audioRecorder?.delegate = self
+            
+            audioRecorder?.record()
+        } catch let error {
+            print("Erro ao gravar áudio \(error)")
+        }
+    }
+    
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        
+        if !flag {
+            finishRecording(success: false)
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let memory = filteredMemories[indexPath.row]
+        
+        let fileManager = FileManager.default
+        
+        do {
+            let audioName = audioURL(for: memory)
+            
+            if fileManager.fileExists(atPath: audioName.path) {
+                audioPlayer = try AVAudioPlayer(contentsOf: audioName)
+                
+                audioPlayer?.play()
+            }
+            
+            let transcriptionName = transcriptionURL(for: memory)
+            
+            if fileManager.fileExists(atPath: transcriptionName.path) {
+                let contents = try String(contentsOf: transcriptionName)
+                
+                print(contents)
+            }
+            
+        } catch let error {
+            print("Erro ao reproduzir áudio \(error)")
+        }
+    }
+    
+    func transcribeAudio(memory: URL) {
+        let audio = audioURL(for: memory)
+        
+        let transcription = transcriptionURL(for: memory)
+        
+        let recognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "pt-BR"))
+        
+        let request = SFSpeechURLRecognitionRequest(url: audio)
+        
+        recognizer?.recognitionTask(with: request) {
+            
+            (result, error) in
+            
+            guard let result = result else {
+                
+                let err = "Erro ao transcrever áudio: \(error!)"
+                print(err)
+                
+                return
+            }
+            
+            if result.isFinal {
+                let text = result.bestTranscription.formattedString
+                
+                do {
+                    print (text)
+                    
+                    try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+                    
+                } catch {
+                    print("Erro ao salvar a transcrição de áudio")
+                }
+            }
+            
+            
+        }
+    }
+    
+    func finishRecording(success: Bool) {
+        collectionView?.backgroundColor = UIColor.white
+        audioRecorder?.stop()
+        
+        if (success) {
+            do {
+                let memoryAudioURL = activeMemory.appendingPathExtension("m4a")
+                let fileManager = FileManager.default
+                if fileManager.fileExists(atPath: memoryAudioURL.path) {
+                    
+                    try fileManager.removeItem(at: memoryAudioURL)
+                    
+                }
+                
+                try fileManager.moveItem(at: recordingURL, to: memoryAudioURL)
+                
+//                transcribeAudio(memory: activeMemory)
+                transcribeHack(memory: activeMemory)
+            } catch let error {
+                print("Erro ao copiar arquivo de áudio \(error)")
+            }
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -203,6 +415,51 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         } else {
             return CGSize(width: 0, height: 50)
         }
+    }
+    
+    func audioURL(for memory: URL) -> URL {
+        
+        return memory.appendingPathExtension("m4a")
+    }
+    
+    func thumbailURL(for memory: URL) -> URL {
+        
+        return memory.appendingPathExtension("thumb")
+    }
+    
+    func transcriptionURL(for memory: URL) -> URL {
+        
+        return memory.appendingPathExtension("txt")
+    }
+    
+    func imageURL(for memory: URL) -> URL {
+        
+        return memory.appendingPathExtension("jpg")
+    }
+    
+    func indexMemory(memory: URL, text: String) {
+        
+        let attributeset = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+        
+        attributeset.title = "myMemories App"
+        attributeset.contentDescription = text
+        attributeset.thumbnailURL = thumbailURL(for: memory)
+        
+        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "br.utfpr.myMemories",
+                                    attributeSet: attributeset)
+        
+        item.expirationDate = Date.distantFuture
+        
+        CSSearchableIndex.default().indexSearchableItems([item]) {
+            error in
+            
+            if let error = error {
+                print("Erro de indexação \(error.localizedDescription)")
+            } else {
+                print("A memória foi indexada com sucesso!")
+            }
+        }
+        
     }
     
     /*
