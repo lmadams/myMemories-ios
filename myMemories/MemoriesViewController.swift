@@ -98,29 +98,6 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         
     }
     
-    func resize(image: UIImage, to width: CGFloat) -> UIImage? {
-        // Calcula a escala da imagem em relção a largura original
-        let scale = width / image.size.width
-        
-        // Calcula a altura baseado na escala, mantendo a proporção da imagem
-        let height = image.size.height * scale
-        
-        // Cria um contexto (canvas) para desenhar dentro dele
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height),
-                                               false, 0)
-        
-        // Desenha a imagem original dentro do contexto
-        image.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
-        
-        // Armazena a imagem compactada na variável
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // Finaliza o contexto criado
-        UIGraphicsEndImageContext()
-        
-        return newImage
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
@@ -149,7 +126,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
                 try jpegData.write(to: imagePath, options: [.atomicWrite])
             }
             
-            if let thumbnail = resize(image: image, to: 200) {
+            if let thumbnail = ImageHelper.resize(image: image, to: 200) {
                 let thumbPath = getDocumentsDirectory().appendingPathComponent(thumbnailName)
                 
                 if let thumbData = UIImageJPEGRepresentation(thumbnail, 80) {
@@ -273,7 +250,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     
     func transcribeHack(memory: URL) {
         
-        let transcription = transcriptionURL(for: memory)
+        let transcription = URLHelper.transcriptionURL(for: memory)
         
         let text = "MInha memoria do dia 10/08"
         
@@ -353,9 +330,9 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     }
     
     func transcribeAudio(memory: URL) {
-        let audio = audioURL(for: memory)
+        let audio = URLHelper.audioURL(for: memory)
         
-        let transcription = transcriptionURL(for: memory)
+        let transcription = URLHelper.transcriptionURL(for: memory)
         
         let recognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "pt-BR"))
         
@@ -427,33 +404,13 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         }
     }
     
-    func audioURL(for memory: URL) -> URL {
-        
-        return memory.appendingPathExtension("m4a")
-    }
-    
-    func thumbailURL(for memory: URL) -> URL {
-        
-        return memory.appendingPathExtension("thumb")
-    }
-    
-    func transcriptionURL(for memory: URL) -> URL {
-        
-        return memory.appendingPathExtension("txt")
-    }
-    
-    func imageURL(for memory: URL) -> URL {
-        
-        return memory.appendingPathExtension("jpg")
-    }
-    
     func indexMemory(memory: URL, text: String) {
         
         let attributeset = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
         
         attributeset.title = "myMemories App"
         attributeset.contentDescription = text
-        attributeset.thumbnailURL = thumbailURL(for: memory)
+        attributeset.thumbnailURL = URLHelper.thumbailURL(for: memory)
         
         let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "br.utfpr.myMemories",
                                     attributeSet: attributeset)

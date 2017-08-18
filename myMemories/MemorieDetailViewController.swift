@@ -17,6 +17,12 @@ class MemorieDetailViewController: UIViewController {
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
 
+    @IBOutlet weak var labelTitle: UILabel!
+    
+    @IBOutlet weak var imageView: UIImageView!
+    
+    @IBOutlet weak var transcripionText: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -30,24 +36,26 @@ class MemorieDetailViewController: UIViewController {
         let fileManager = FileManager.default
         
         do {
-            let audioName = URLHelper.audioURL(for: memory)
-            
             // Recupera AUDIO
+            let audioName = URLHelper.audioURL(for: memory)
             if fileManager.fileExists(atPath: audioName.path) {
                 audioPlayer = try AVAudioPlayer(contentsOf: audioName)
-//                audioPlayer?.play()
             }
             
             // recupera transcricption
             let transcriptionName = URLHelper.transcriptionURL(for: memory)
             if fileManager.fileExists(atPath: transcriptionName.path) {
                 let contents = try String(contentsOf: transcriptionName)
-                print(contents)
+                transcripionText.text = contents
             }
             
             // Recupera titulo
+            labelTitle.text = memory.lastPathComponent
             
             // Recupera imagem para exibir
+            let imgName = URLHelper.imageURL(for: memory).path
+            let image = UIImage.init(contentsOfFile: imgName)
+            imageView.image = image
             
         } catch let error {
             print("Erro ao recuperar informacoes do file manager \(error)")
@@ -58,4 +66,18 @@ class MemorieDetailViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
 
+    @IBAction func onClickPlayMemory(_ sender: Any) {
+        print("Play audio")
+        audioPlayer?.play()
+    }
+    
+    @IBAction func onClickRecord(_ sender: Any) {
+        print("On Click to record")
+    }
+    
+    @IBAction func onClickToEdit(_ sender: Any) {
+        print("On click to edit description")
+    }
+    
+    
 }
