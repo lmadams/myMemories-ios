@@ -319,9 +319,10 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         // Abre tela com os detalhes da memoria
-        if let viewController = storyboard?.instantiateViewController(withIdentifier: "MemoryDetail") {
-            navigationController?.pushViewController(viewController, animated: true)
-        }
+        let viewController = storyboard?.instantiateViewController(withIdentifier: "MemoryDetail") as! MemorieDetailViewController
+        viewController.memory = filteredMemories[indexPath.row]
+        navigationController?.pushViewController(viewController, animated: true)
+        
         
         /*
         let memory = filteredMemories[indexPath.row]
@@ -470,15 +471,4 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         }
         
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
