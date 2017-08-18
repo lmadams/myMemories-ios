@@ -315,7 +315,15 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         }
     }
     
+    // Metodo chamado quando usuario clica na imagem da tela
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // Abre tela com os detalhes da memoria
+        if let viewController = storyboard?.instantiateViewController(withIdentifier: "MemoryDetail") {
+            navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+        /*
         let memory = filteredMemories[indexPath.row]
         
         let fileManager = FileManager.default
@@ -340,6 +348,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         } catch let error {
             print("Erro ao reproduzir áudio \(error)")
         }
+ */
     }
     
     func transcribeAudio(memory: URL) {

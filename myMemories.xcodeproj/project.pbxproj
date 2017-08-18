@@ -14,6 +14,7 @@
 		F502B14F1F2BF87F00EB6581 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F502B14D1F2BF87F00EB6581 /* LaunchScreen.storyboard */; };
 		F502B1571F2C0CED00EB6581 /* MemoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502B1561F2C0CED00EB6581 /* MemoriesViewController.swift */; };
 		F502B1591F2C0E1500EB6581 /* MemoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502B1581F2C0E1500EB6581 /* MemoryCell.swift */; };
+		F53FC8FF1F479BA20086754F /* MemorieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		F502B1501F2BF87F00EB6581 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F502B1561F2C0CED00EB6581 /* MemoriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoriesViewController.swift; sourceTree = "<group>"; };
 		F502B1581F2C0E1500EB6581 /* MemoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryCell.swift; sourceTree = "<group>"; };
+		F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemorieDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				F502B1501F2BF87F00EB6581 /* Info.plist */,
 				F502B1561F2C0CED00EB6581 /* MemoriesViewController.swift */,
 				F502B1581F2C0E1500EB6581 /* MemoryCell.swift */,
+				F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */,
 			);
 			path = myMemories;
 			sourceTree = "<group>";
@@ -143,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F502B1591F2C0E1500EB6581 /* MemoryCell.swift in Sources */,
+				F53FC8FF1F479BA20086754F /* MemorieDetailViewController.swift in Sources */,
 				F502B1571F2C0CED00EB6581 /* MemoriesViewController.swift in Sources */,
 				F502B1471F2BF87F00EB6581 /* ViewController.swift in Sources */,
 				F502B1451F2BF87F00EB6581 /* AppDelegate.swift in Sources */,
@@ -307,6 +311,7 @@
 				F502B1551F2BF87F00EB6581 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
