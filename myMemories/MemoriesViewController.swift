@@ -22,7 +22,6 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     var activeMemory: URL!
     var recordingURL: URL!
     var audioRecorder: AVAudioRecorder?
-    var audioPlayer: AVAudioPlayer?
     var searchQuery: CSSearchQuery?
     
     override func viewDidLoad() {
@@ -30,7 +29,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addMemory))
         
-        recordingURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        recordingURL = Memory.getDocumentsDirectory().appendingPathComponent("recording.m4a")
         
         loadMemories()
     }
@@ -57,13 +56,6 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
     }
     
     func loadMemories() {
@@ -71,7 +63,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         
         // Tentativa de carregar todos os arquivos de nosso diretório raiz (root)
         guard let files = try? FileManager.default.contentsOfDirectory(at:
-            getDocumentsDirectory(), includingPropertiesForKeys: nil, options: [])
+            Memory.getDocumentsDirectory(), includingPropertiesForKeys: nil, options: [])
             else {
                 return
             }
@@ -85,7 +77,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
                 
                 // Remove a extensão
                 let noExtension = filename.replacingOccurrences(of: ".thumb", with: "")
-                let memoryPath = getDocumentsDirectory().appendingPathComponent(noExtension)
+                let memoryPath = Memory.getDocumentsDirectory().appendingPathComponent(noExtension)
                 
                 // Armazena o path dos arquivos
                 memories.append(memoryPath)
@@ -101,7 +93,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
-            saveNewMemory(image: possibleImage)
+            Memory.saveNewMemory(image: possibleImage)
             
             loadMemories()
         }
@@ -114,28 +106,6 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         viewController.modalPresentationStyle = .formSheet
         viewController.delegate = self
         navigationController?.present(viewController, animated: true)
-    }
-    
-    func saveNewMemory(image: UIImage) {
-        let memoryName = "memory-\(Date().timeIntervalSince1970)"
-        let imageName = memoryName + ".jpg"
-        let thumbnailName = memoryName + ".thumb"
-        do {
-            let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
-            if let jpegData = UIImageJPEGRepresentation(image, 80) {
-                try jpegData.write(to: imagePath, options: [.atomicWrite])
-            }
-            
-            if let thumbnail = ImageHelper.resize(image: image, to: 200) {
-                let thumbPath = getDocumentsDirectory().appendingPathComponent(thumbnailName)
-                
-                if let thumbData = UIImageJPEGRepresentation(thumbnail, 80) {
-                    try thumbData.write(to: thumbPath, options: [.atomicWrite])
-                }
-            }
-        } catch {
-            print("Falha ao salvar foto no disco")
-        }
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
