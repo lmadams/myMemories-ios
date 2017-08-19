@@ -259,7 +259,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
             
             try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
             
-            indexMemory(memory: memory, text: text)
+            Memory.indexMemory(memory: memory, text: text)
             
         } catch {
             print("Erro ao salvar a transcrição de áudio")
@@ -299,34 +299,6 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         let viewController = storyboard?.instantiateViewController(withIdentifier: "MemoryDetail") as! MemorieDetailViewController
         viewController.memory = filteredMemories[indexPath.row]
         navigationController?.pushViewController(viewController, animated: true)
-        
-        
-        /*
-        let memory = filteredMemories[indexPath.row]
-        
-        let fileManager = FileManager.default
-        
-        do {
-            let audioName = audioURL(for: memory)
-            
-            if fileManager.fileExists(atPath: audioName.path) {
-                audioPlayer = try AVAudioPlayer(contentsOf: audioName)
-                
-                audioPlayer?.play()
-            }
-            
-            let transcriptionName = transcriptionURL(for: memory)
-            
-            if fileManager.fileExists(atPath: transcriptionName.path) {
-                let contents = try String(contentsOf: transcriptionName)
-                
-                print(contents)
-            }
-            
-        } catch let error {
-            print("Erro ao reproduzir áudio \(error)")
-        }
- */
     }
     
     func transcribeAudio(memory: URL) {
@@ -404,28 +376,4 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         }
     }
     
-    func indexMemory(memory: URL, text: String) {
-        
-        let attributeset = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
-        
-        attributeset.title = "myMemories App"
-        attributeset.contentDescription = text
-        attributeset.thumbnailURL = URLHelper.thumbailURL(for: memory)
-        
-        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "br.utfpr.myMemories",
-                                    attributeSet: attributeset)
-        
-        item.expirationDate = Date.distantFuture
-        
-        CSSearchableIndex.default().indexSearchableItems([item]) {
-            error in
-            
-            if let error = error {
-                print("Erro de indexação \(error.localizedDescription)")
-            } else {
-                print("A memória foi indexada com sucesso!")
-            }
-        }
-        
-    }
 }

@@ -77,6 +77,22 @@ class MemorieDetailViewController: UIViewController {
     
     @IBAction func onClickToEdit(_ sender: Any) {
         print("On click to edit description")
+        
+        let transcription = URLHelper.transcriptionURL(for: memory)
+        
+        if let text = transcripionText.text {
+            do {
+                print (text)
+                
+                try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+                
+                Memory.indexMemory(memory: memory, text: text)
+                
+                navigationController?.popViewController(animated: true)
+            } catch {
+                print("Erro ao salvar a transcrição de áudio")
+            }
+        }
     }
     
     

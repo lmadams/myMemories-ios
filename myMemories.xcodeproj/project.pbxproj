@@ -17,6 +17,7 @@
 		F53FC8FF1F479BA20086754F /* MemorieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */; };
 		F53FC9011F47A9830086754F /* URLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53FC9001F47A9830086754F /* URLHelper.swift */; };
 		F53FC9031F47B02A0086754F /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53FC9021F47B02A0086754F /* ImageHelper.swift */; };
+		F53FC9051F47B58C0086754F /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53FC9041F47B58C0086754F /* Memory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemorieDetailViewController.swift; sourceTree = "<group>"; };
 		F53FC9001F47A9830086754F /* URLHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelper.swift; sourceTree = "<group>"; };
 		F53FC9021F47B02A0086754F /* ImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
+		F53FC9041F47B58C0086754F /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				F53FC8FE1F479BA20086754F /* MemorieDetailViewController.swift */,
 				F53FC9001F47A9830086754F /* URLHelper.swift */,
 				F53FC9021F47B02A0086754F /* ImageHelper.swift */,
+				F53FC9041F47B58C0086754F /* Memory.swift */,
 			);
 			path = myMemories;
 			sourceTree = "<group>";
@@ -151,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F53FC9051F47B58C0086754F /* Memory.swift in Sources */,
 				F502B1591F2C0E1500EB6581 /* MemoryCell.swift in Sources */,
 				F53FC8FF1F479BA20086754F /* MemorieDetailViewController.swift in Sources */,
 				F502B1571F2C0CED00EB6581 /* MemoriesViewController.swift in Sources */,
