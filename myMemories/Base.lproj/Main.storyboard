@@ -22,17 +22,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="6bc-56-jzd">
-                                <rect key="frame" x="20" y="-12739.5" width="280" height="26047"/>
+                                <rect key="frame" x="20" y="95" width="280" height="378.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEl-Zu-XKJ">
-                                        <rect key="frame" x="0.0" y="0.0" width="280" height="25955"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="286.5"/>
                                         <string key="text">De modo a funcionar corretamente, o aplicativo MyMemories precisa de permissões para acessar a biblioteca de fotos, gravar sua voz (microfone) e transcrever o que você disse. Clique no botão abaixo para liberar as permissões necessárias. Você pode mudar sua decisão mais tarde se desejar,lá nas configurações de seu celular.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ps-aj-O34">
-                                        <rect key="frame" x="0.0" y="26005" width="280" height="42"/>
+                                        <rect key="frame" x="0.0" y="336.5" width="280" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <state key="normal" title="Confirmar"/>
                                         <connections>
@@ -132,9 +132,6 @@
                                 <rect key="frame" x="136" y="516" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Record"/>
-                                <connections>
-                                    <action selector="onClickRecord:" destination="aY5-oU-XNM" eventType="touchUpInside" id="QD9-ZZ-S1R"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iqI-jR-92v">
                                 <rect key="frame" x="264" y="518" width="40" height="30"/>
@@ -174,6 +171,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="buttonRecord" destination="a79-wl-uCc" id="Fk1-Jy-cE1"/>
                         <outlet property="imageView" destination="t1f-w4-cMM" id="X4U-Q6-duc"/>
                         <outlet property="labelTitle" destination="i3s-55-g3a" id="YxN-7x-hGR"/>
                         <outlet property="transcripionText" destination="bXr-53-kJh" id="dna-By-Xks"/>

@@ -236,6 +236,7 @@ class MemoriesViewController: UICollectionViewController, UIImagePickerControlle
         }
     }
     
+    // @TODO refatorar
     func recordMemory() {
         collectionView?.backgroundColor = UIColor.red
         let recordSession = AVAudioSession.sharedInstance()
